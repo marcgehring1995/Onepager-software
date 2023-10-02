@@ -12,7 +12,7 @@ import os
 import openai
 import pyrebase
 
-
+st.set_page_config(layout='wide')
 firebase_config = {
     "apiKey": st.secrets["firebase"]["apiKey"],
     "authDomain": st.secrets["firebase"]["authDomain"],
@@ -47,7 +47,7 @@ if st.session_state['logged_in']:
     openai.api_key = st.secrets["OPENAI_API_KEY"]
 
     # Set up Streamlit app
-    st.set_page_config(layout='wide')
+    
     st.title('One-Pager')
     input_column, response_column = st.columns([2,3])
     uploaded_file = input_column.file_uploader("Choose a PDF file", type="pdf")
