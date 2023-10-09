@@ -10,6 +10,7 @@ from llama_index.query_engine.retriever_query_engine import RetrieverQueryEngine
 from llama_index.indices.vector_store.retrievers import VectorIndexRetriever
 from docx import Document as DocxDocument
 from io import BytesIO
+import openai
 load_dotenv()
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 # Set up Streamlit app
