@@ -56,7 +56,7 @@ if st.session_state['logged_in']:
 
     # Add inputs for user context
     user = input_column.text_input('Who are you?')
-    audience = input_column.text_input('Who is the summary for?')
+    audience = input_column.text_input('Who is the audience?')
 
     # Add inputs for user goal
     goal = input_column.text_input('What is your goal?')

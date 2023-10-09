@@ -11,7 +11,7 @@ from llama_index.indices.vector_store.retrievers import VectorIndexRetriever
 from docx import Document as DocxDocument
 from io import BytesIO
 load_dotenv()
-
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 # Set up Streamlit app
 st.set_page_config(layout='wide')
 st.title('Ndus3 DEMO')
