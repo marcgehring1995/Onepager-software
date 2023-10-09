@@ -14,31 +14,25 @@ load_dotenv()
 
 # Set up Streamlit app
 st.set_page_config(layout='wide')
-st.title('One-Pager')
+st.title('Ndus3 DEMO')
 input_column, response_column = st.columns([2,3])
 uploaded_file = input_column.file_uploader("Choose a PDF file", type="pdf")
 
 formality = input_column.slider('Formality', 0, 100, 50)
 
 # Add inputs for user context
-user = input_column.text_input('Who are you?')
-audience = input_column.text_input('Who is the audience?')
+
 
 # Add inputs for user goal
-goal = input_column.text_input('What is your goal?')
+userprompt = input_column.text_input('Prompt')
 
 # Add dropdown for response structure
-structure = input_column.selectbox('Structure of the response', ['Summary', 'One-pager', 'Report', 'Speech', 
-'Presentation','Testament', 'multi-page document', 'Augmented generation'])
 
-language = input_column.selectbox('Language', ['English', 'Spanish', 'French', 'German', 'Italian', 'Turkish'])
+
+language = input_column.selectbox('Language', ['English','', 'Spanish', 'French', 'German', 'Italian', 'Turkish'])
 
 query_templates = {
-    "Primary": f"As {user}, I need a detailed and comprehensive {structure.lower()} of the document for {audience}. My goal is {goal}. I want the response in {language}. Please provide the response in markdown format with appropriate formatting and styles. {formality}Generate whole complete {structure.lower()}.",
-    "Thorough analysis": f"As {user}, I'm looking for a thorough analysis in the form of a {structure.lower()} of the document for {audience}. My goal is {goal}. The response should be in {language} and in markdown format. {formality}Please generate a detailed and extensive {structure.lower()}.",
-    "Exhaustive summary": f"As {user}, I need an exhaustive {structure.lower()} of the document for {audience}. My goal is {goal}. I want the response in {language}. Please provide the response in markdown format. {formality}Generate a long and comprehensive {structure.lower()}.",
-    "Complete overview": f"As {user}, I need a complete overview in the form of a {structure.lower()} of the document for {audience}. My goal is {goal}. I want the response in {language}. Please provide the response in markdown format with appropriate features. {formality}Generate a full and extensive {structure.lower()}.",
-    "Multi-page report": f"As {user}, I need a multi-page {structure.lower()} of the document for {audience}. My goal is {goal}. I want the response in {language}. Please provide the response in markdown format with appropriate features. {formality}Generate a multi-page {structure.lower()}.",
+    "Response": f"I need a detailed and comprehensive response for the given document. {userprompt}. Please provide the response in markdown format with appropriate formatting and styles.",
 }
 
 selected_description = input_column.selectbox('Select a query template', list(query_templates.keys()))
@@ -72,10 +66,10 @@ if uploaded_file is not None:
             formality = "In a highly formal and academic style, "
 
         # Add user context and structure to the query
-        query = selected_template.format(user=user, structure=structure, audience=audience, goal=goal, language=language, formality=formality)
+        query = selected_template.format(userprompt=userprompt, language=language, formality=formality)
         # Generate the response
 # Generate the response
-        with st.spinner(f'Generating {structure.lower()}...'):
+        with st.spinner(f'Generating Response...'):
             retriever = VectorIndexRetriever(index=index)
             query_engine = RetrieverQueryEngine(retriever=retriever)
             response = query_engine.query(query)
@@ -97,4 +91,4 @@ if uploaded_file is not None:
         response_column.download_button("Download DOCX", buf.getvalue(), file_name="response.docx", mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 
 
-input_column.markdown("<p style='text-align: center;'> Brought to you with ❤ by WeConnectAI </p>", unsafe_allow_html=True)
+input_column.markdown("<p style='text-align: center;'> Ndus3 LAB Day!!! </p>", unsafe_allow_html=True)
