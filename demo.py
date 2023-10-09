@@ -12,7 +12,7 @@ from docx import Document as DocxDocument
 from io import BytesIO
 import openai
 load_dotenv()
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+
 # Set up Streamlit app
 st.set_page_config(layout='wide')
 st.title('Ndus3 DEMO')
@@ -79,6 +79,7 @@ if uploaded_file is not None:
 
     # Display the response stored in the session state
     if 'response' in st.session_state:
+        openai.api_key = st.secrets["OPENAI_API_KEY"]
         response_text = st.session_state['response']
         response_column.markdown(response_text)
         # Create a new Document
