@@ -9,7 +9,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from llama_index import download_loader
-
+os.chdir(os.getcwd())
 st.set_page_config(layout='wide')
 
 # Retrieve OpenAI API key from secrets
