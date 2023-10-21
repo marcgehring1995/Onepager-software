@@ -12,7 +12,7 @@ import os
 import openai
 import pyrebase
 import markdown
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup 
 
 st.set_page_config(layout='wide')
 firebase_config = {
@@ -49,7 +49,6 @@ if st.session_state['logged_in']:
     openai.api_key = st.secrets["OPENAI_API_KEY"]
 
     # Set up Streamlit app
-    st.set_page_config(layout='wide')
     st.title('One-Pager')
     input_column, response_column = st.columns([2,3])
 
