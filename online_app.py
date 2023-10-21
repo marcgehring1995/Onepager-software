@@ -14,6 +14,7 @@ import pyrebase
 import markdown
 from bs4 import BeautifulSoup
 from docx import Document as DocxDocument
+from io import BytesIO
 
 st.set_page_config(layout='wide')
 firebase_config = {
