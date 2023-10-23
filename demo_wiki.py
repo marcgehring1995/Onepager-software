@@ -9,7 +9,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from llama_index import download_loader
-os.chdir(os.getcwd())
 st.set_page_config(layout='wide')
 
 # Retrieve OpenAI API key from secrets
@@ -79,4 +78,4 @@ if pages:
     if 'response' in st.session_state:
         response_column.markdown(st.session_state['response'])
 
-input_column.markdown("<p style='text-align: center;'> Ndus3 LAB Day DEMO </p>", unsafe_allow_html=True)
+input_column.markdown("<p style='text-align: center;'> Wiki DEMO </p>", unsafe_allow_html=True)

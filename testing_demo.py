@@ -10,7 +10,6 @@ from llama_index.query_engine.retriever_query_engine import RetrieverQueryEngine
 from llama_index.indices.vector_store.retrievers import VectorIndexRetriever
 from docx import Document as DocxDocument
 from io import BytesIO
-import markdown as markdown
 import openai
 load_dotenv()
 
@@ -31,7 +30,7 @@ userprompt = input_column.text_input('Prompt')
 # Add dropdown for response structure
 
 
-language = input_column.selectbox('Language', ['English','', 'Spanish', 'French', 'German', 'Italian', 'Turkish'])
+language = input_column.selectbox('Language', ['English','Dutch','Binary'])
 
 query_templates = {
     "Response": f"I need a detailed and comprehensive response for the given document. {userprompt}. Please provide the response in markdown format with appropriate formatting and styles.",
