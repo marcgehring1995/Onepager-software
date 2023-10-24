@@ -15,7 +15,7 @@ load_dotenv()
 
 # Set up Streamlit app
 st.set_page_config(layout='wide')
-st.title('Ndus3 DEMO')
+st.title('DEMO')
 input_column, response_column = st.columns([2,3])
 uploaded_file = input_column.file_uploader("Choose a PDF file", type="pdf")
 

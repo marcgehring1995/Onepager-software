@@ -14,7 +14,7 @@ st.set_page_config(layout='wide')
 # Retrieve OpenAI API key from secrets
 
 # Set up Streamlit app
-st.title('LAB-DAY DEMO, WIKI')
+st.title('DEMO, WIKI')
 input_column, response_column = st.columns([2,3])
 
 # Add inputs for Wikipedia pages
