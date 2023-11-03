@@ -15,6 +15,9 @@ def app():
     firebase = pyrebase.initialize_app(firebase_config)
     auth = firebase.auth()
 
+    username = st.text_input('Username')
+    password = st.text_input('Password', type='password')
+
     if st.button('Log In'):
         try:
             user = auth.sign_in_with_email_and_password(username, password)
