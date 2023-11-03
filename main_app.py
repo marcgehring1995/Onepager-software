@@ -25,9 +25,9 @@ def app():
     input_column, response_column = st.columns([2,3])
 
     # Add inputs for sender, recipient, and purpose
-    sender = input_column.text_input('Who sends the OnePager?')
-    recipient = input_column.text_input('Who receives the OnePager?')
-    purpose = input_column.text_input('What is the purpose of the OnePager?')
+    sender = input_column.text_input('Who sends the OnePager?', value='e.g. Assistant to the Board of Management at a medium-sized automotive supplier')
+    recipient = input_column.text_input('Who receives the OnePager?', value='e.g. Marketing director in our/another company')
+    purpose = input_column.text_input('What is the purpose of the OnePager?', value='e.g. Proposal for cooperation with software company xy for MVP development')
 
     # Add dropdown for document structure
     doc_structure = input_column.radio('How should the OnePager be structured?', ['AI Suggestion', 'Bullet Points', 'Pitch (3 Parts)', 'Report', 'No Structure'], horizontal=True)
