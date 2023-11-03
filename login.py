@@ -14,7 +14,7 @@ def app():
 
     firebase = pyrebase.initialize_app(firebase_config)
     auth = firebase.auth()
-
+    st.image("onepager-logo-tr.png")
     username = st.text_input('Username')
     password = st.text_input('Password', type='password')
 
@@ -22,5 +22,6 @@ def app():
         try:
             user = auth.sign_in_with_email_and_password(username, password)
             st.session_state['logged_in'] = True
+           
         except:
             st.error('Invalid username/password')    
