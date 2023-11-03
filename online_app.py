@@ -11,6 +11,6 @@ if 'logged_in' not in st.session_state:
 # Create login form
 if not st.session_state['logged_in']:
     login.app()
-    # st.experimental_rerun()  # Rerun the script after login
+    st.rerun()  # Rerun the script after login
 else:
     main_app.app()
