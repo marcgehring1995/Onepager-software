@@ -30,7 +30,7 @@ doc_structure = input_column.radio('How should the OnePager be structured?', ['A
 # Add sliders for tone, technicality, and length
 
 formality_labels = {1: 'Casual', 2: 'Somewhat Casual', 3: 'Neutral', 4: 'Somewhat Formal', 5: 'Formal'}
-tone_value = input_column.slider('How formal should the OnePager be?', 1, 5, 3)
+tone_value = input_column.slider('Casual 1 <-----------------------> 5 Formal', 1, 5, 3)
 tone = formality_labels[tone_value]
 input_column.write('Selected formality: ' + tone)
 technicality = input_column.slider('How technical should the OnePager be formulated?', 1, 5, 3, format="%d")
