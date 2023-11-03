@@ -33,6 +33,8 @@ auth = firebase.auth()
 # Initialize session state
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
+if 'login_button_clicked' not in st.session_state:
+    st.session_state['login_button_clicked'] = False
 
 # Create login form
 if not st.session_state['logged_in']:
@@ -40,15 +42,18 @@ if not st.session_state['logged_in']:
     password = st.text_input('Password', type='password')
 
     if st.button('Log In'):
+        st.session_state['login_button_clicked'] = True
         try:
             user = auth.sign_in_with_email_and_password(username, password)
             st.session_state['logged_in'] = True
-            
+            st.experimental_rerun()  # Rerun the script after login
         except:
             st.error('Invalid username/password')
+elif st.session_state['login_button_clicked']:
+    st.session_state['login_button_clicked'] = False
+    st.experimental_rerun()  # Rerun the script after login
 
 if st.session_state['logged_in']:
-    st.experimental_rerun()  # Rerun the script after login
     # Retrieve OpenAI API key from secrets
     openai.api_key = st.secrets["OPENAI_API_KEY"]
 
