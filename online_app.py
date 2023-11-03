@@ -43,11 +43,12 @@ if not st.session_state['logged_in']:
         try:
             user = auth.sign_in_with_email_and_password(username, password)
             st.session_state['logged_in'] = True
-            st.experimental_rerun()  # Rerun the script after login
+            
         except:
             st.error('Invalid username/password')
 
 if st.session_state['logged_in']:
+    st.experimental_rerun()  # Rerun the script after login
     # Retrieve OpenAI API key from secrets
     openai.api_key = st.secrets["OPENAI_API_KEY"]
 
