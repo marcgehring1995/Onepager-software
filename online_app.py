@@ -43,6 +43,7 @@ if not st.session_state['logged_in']:
         try:
             user = auth.sign_in_with_email_and_password(username, password)
             st.session_state['logged_in'] = True
+            st.experimental_rerun()  # Rerun the script after login
         except:
             st.error('Invalid username/password')
 
@@ -51,7 +52,7 @@ if st.session_state['logged_in']:
     openai.api_key = st.secrets["OPENAI_API_KEY"]
 
     # Set up Streamlit app
-    st.title('One-Pager')
+    st.image("onepager-logo-tr.png")
     input_column, response_column = st.columns([2,3])
 
     # Add inputs for sender, recipient, and purpose

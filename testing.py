@@ -17,7 +17,7 @@ load_dotenv()
 
 # Set up Streamlit app
 st.set_page_config(layout='wide')
-st.title('One-Pager')
+st.image("onepager-logo-tr.png")
 input_column, response_column = st.columns([2,3])
 
 # Add inputs for sender, recipient, and purpose
