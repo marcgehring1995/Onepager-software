@@ -30,11 +30,21 @@ doc_structure = input_column.radio('How should the OnePager be structured?', ['A
 # Add sliders for tone, technicality, and length
 
 formality_labels = {1: 'Casual', 2: 'Somewhat Casual', 3: 'Neutral', 4: 'Somewhat Formal', 5: 'Formal'}
-tone_value = input_column.slider('Casual 1 <-----------------------> 5 Formal', 1, 5, 3)
+formality_options = {'Casual': 1, 'Somewhat Casual': 2, 'Neutral': 3, 'Somewhat Formal': 4, 'Formal': 5}
+formality_label = input_column.select_slider('Select formality', options=list(formality_options.keys()))
+tone_value = formality_options[formality_label]
 tone = formality_labels[tone_value]
 input_column.write('Selected formality: ' + tone)
-technicality = input_column.slider('How technical should the OnePager be formulated?', 1, 5, 3, format="%d")
-length = input_column.slider('How detailed should the OnePager be?', 1, 5, 3, format="%d")
+
+
+technicality_options = {'Non-technical': 1, 'Somewhat non-technical': 2, 'Neutral': 3, 'Somewhat technical': 4, 'Technical': 5}
+technicality_label = input_column.select_slider('Select technicality', options=list(technicality_options.keys()))
+technicality = technicality_options[technicality_label]
+
+# Add slider for max tokens
+length_options = {'Short': 300, 'Medium': 450, 'Long': 600}
+length_label = input_column.select_slider('Select length', options=list(length_options.keys()))
+max_tokens = length_options[length_label]
 
 # Add file uploader for background information
 uploaded_file = input_column.file_uploader("Upload a PDF with background information.", type="pdf")
@@ -46,15 +56,13 @@ call_to_action = input_column.text_input('What is the recommendation for action?
 action_tone = input_column.slider('How directly should this recommendation be placed?', 1, 5, 3, format="%d")
 additional_info = input_column.text_input('What additional information belongs in the OnePager?')
 
-# Add slider for temperature
-temperature = input_column.slider('Temperature', 0.0, 1.0, 0.5)
 
-# Add slider for max tokens
-max_tokens = input_column.slider('Max Tokens', 100, 2000, 500)
+
+
 
 if uploaded_file is not None:
     # Create the ServiceContext with the user-selected temperature
-    service_context = ServiceContext.from_defaults(llm=OpenAI(temperature=temperature, model="gpt-4", max_tokens=max_tokens))
+    service_context = ServiceContext.from_defaults(llm=OpenAI(temperature=0.2, model="gpt-4", max_tokens=max_tokens))
 
     with st.spinner('Reading PDF...'):
         pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
