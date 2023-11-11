@@ -8,3 +8,5 @@ Features
 - Customizable length: Short, Medium, Long
 - PDF upload for background information
 - Deadline input with date selection
+
+![Screenshot 2023-11-11 025601](https://github.com/eakgun/onepager-streamlit/assets/60859449/c1c2bbd6-0111-4155-8341-150df0e8fc26)
