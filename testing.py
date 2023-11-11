@@ -21,13 +21,22 @@ st.image("onepager-logo-tr.png")
 input_column, response_column = st.columns([2,3])
 
 # Add inputs for sender, recipient, and purpose
-sender = input_column.text_input('Who sends the OnePager?')
-recipient = input_column.text_input('Who receives the OnePager?')
+sender_column1, sender_column2 = input_column.columns([1,2])
+sender_column1.markdown('&nbsp;')
+sender_column1.markdown('Who sends the OnePager?')
+sender = sender_column2.text_input('', key='sender')
+
+recipient_column1, recipient_column2 = input_column.columns([1,2])
+recipient_column1.markdown('&nbsp;')
+recipient_column1.markdown('Who receives the OnePager?')
+recipient_column1.markdown('&nbsp;')
+recipient = recipient_column2.text_input('', key='recipient', value='e.g. Assistant to the Board of Management at a medium-sized automotive supplier')
+
 purpose = input_column.text_input('What is the purpose of the OnePager?')
 
 # Add dropdown for document structure
-doc_structure = input_column.radio('How should the OnePager be structured?', ['AI Suggestion', 'Bullet Points', 'Pitch (3 Parts)', 'Report', 'No Structure'], horizontal=True)
-# Add sliders for tone, technicality, and length
+# New code
+doc_structure = input_column.radio('How should the OnePager be structured?', ['AI Suggestion', 'Bullet Points', 'Pitch (3 Parts)', 'Report', 'No Structure', 'Decision Paper'], horizontal=True)# Add sliders for tone, technicality, and length
 
 formality_labels = {1: 'Casual', 2: 'Somewhat Casual', 3: 'Neutral', 4: 'Somewhat Formal', 5: 'Formal'}
 formality_options = {'Casual': 1, 'Somewhat Casual': 2, 'Neutral': 3, 'Somewhat Formal': 4, 'Formal': 5}
@@ -51,12 +60,14 @@ uploaded_file = input_column.file_uploader("Upload a PDF with background informa
 
 # Add inputs for source description, call to action, and additional info
 source_description = input_column.text_input('What kind of document is this? Why is it relevant?')
-has_call_to_action = input_column.checkbox('Should the OnePager give a recommendation for action?')
 call_to_action = input_column.text_input('What is the recommendation for action?')
 action_tone = input_column.slider('How directly should this recommendation be placed?', 1, 5, 3, format="%d")
 additional_info = input_column.text_input('What additional information belongs in the OnePager?')
 
-
+# New code
+deadline_column1, deadline_column2 = input_column.columns(2)
+deadline_type = deadline_column1.radio('Is there a deadline?', ['Up to decision', 'Up to execution'])
+deadline_date = deadline_column2.date_input('Select a date')
 
 
 
@@ -96,20 +107,17 @@ if uploaded_file is not None:
             action_formality = "In a highly formal and academic style, "
 
         # Add user context and structure to the query
+        # New code
         if doc_structure == 'AI Suggestion':
-            query = f"As {sender}, I need a document for {recipient} that is {length} in length and {technicality} in technicality. My goal is {purpose}. I want the response in English. Please provide the response in markdown format with appropriate features. {formality}"
+            query = f"As {sender}, I need a document for {recipient} that is {technicality} in technicality. My goal is {purpose}. I want the response in English. Please provide the response in markdown format with appropriate features. {formality}"
+        elif doc_structure == 'Decision Paper':
+            query = f"As a {sender}, you will provide {recipient} with a short decision paper. The purpose of the document is: {purpose}. To create the document, you can refer to the following three elements: source, additional information and call to action. The source is described as {source_description} and is delimited by triple backticks: ```source```. Additional information: {additional_info}. Call to action: {call_to_action}. Your response will be structured in the three text sections “Background”, “Problem” and “Solution”. The writing style of the document should be {tone} with a {technicality} level of technicality."
         else:
-            query = f"As {sender}, I need a {doc_structure} of the document for {recipient} that is {length} in length and {technicality} in technicality. My goal is {purpose}. I want the response in English. Please provide the response in markdown format with appropriate features. {formality}"
-        
+            query = f"As {sender}, I need a {doc_structure} of the document for {recipient} that is {length_label} in length and {technicality} in technicality. My goal is {purpose}. I want the response in English. Please provide the response in markdown format with appropriate features. {formality}"
         # If source_description is provided, add it to the query
-        if source_description:
+        if source_description and (doc_structure != "Decision Paper"):
             query += f" The source document is: {source_description}."
 
-        # If has_call_to_action is selected, add call to action to the query
-        if has_call_to_action:
-            query += f" Generate a full and extensive {doc_structure} with a recommendation for action: {call_to_action}. {action_formality} The additional information is: {additional_info}."
-        else:
-            query += f" Generate a full and extensive {doc_structure}."
 
         # Generate the response
         with st.spinner(f'Generating {doc_structure.lower()}...'):
