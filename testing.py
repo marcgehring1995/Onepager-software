@@ -34,7 +34,7 @@ formality_options = {'Casual': 1, 'Somewhat Casual': 2, 'Neutral': 3, 'Somewhat 
 formality_label = input_column.select_slider('Select formality', options=list(formality_options.keys()))
 tone_value = formality_options[formality_label]
 tone = formality_labels[tone_value]
-input_column.write('Selected formality: ' + tone)
+
 
 
 technicality_options = {'Non-technical': 1, 'Somewhat non-technical': 2, 'Neutral': 3, 'Somewhat technical': 4, 'Technical': 5}

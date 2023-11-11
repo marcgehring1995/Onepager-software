@@ -38,7 +38,6 @@ def app():
     formality_label = input_column.select_slider('Select formality', options=list(formality_options.keys()))
     tone_value = formality_options[formality_label]
     tone = formality_labels[tone_value]
-    input_column.write('Selected formality: ' + tone)
     
 
 
@@ -62,15 +61,11 @@ def app():
     action_tone = input_column.slider('How directly should this recommendation be placed?', 1, 5, 3, format="%d")
     additional_info = input_column.text_input('What additional information belongs in the OnePager?')
 
-    # Add slider for temperature
-    temperature = input_column.slider('Temperature', 0.0, 1.0, 0.5)
 
-    # Add slider for max tokens
-    max_tokens = input_column.slider('Max Tokens', 100, 2000, 500)
 
     if uploaded_file is not None:
         # Create the ServiceContext with the user-selected temperature
-        service_context = ServiceContext.from_defaults(llm=OpenAI(temperature=temperature, model="gpt-4", max_tokens=max_tokens))
+        service_context = ServiceContext.from_defaults(llm=OpenAI(temperature=0.2, model="gpt-4", max_tokens=max_tokens))
 
         with st.spinner('Reading PDF...'):
             pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
