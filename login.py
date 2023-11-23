@@ -14,7 +14,7 @@ def app():
 
     firebase = pyrebase.initialize_app(firebase_config)
     auth = firebase.auth()
-    st.image("onepager-logo-tr.png")
+    st.image("onepager-logo.png")
     username = st.text_input('Username')
     password = st.text_input('Password', type='password')
 

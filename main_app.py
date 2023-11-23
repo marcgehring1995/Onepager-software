@@ -34,7 +34,7 @@ def app():
     recipient_column1.markdown('&nbsp;')
     recipient = recipient_column2.text_input('', key='recipient', placeholder="e.g. Marketing director in our/another company")
 
-    purpose = input_column.text_input('What is the purpose of the OnePager?', key='purpose', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
+    purpose = input_column.text_input('What is the context of this one-pager?', key='context', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
 
     # Add dropdown for document structure
     # New code
