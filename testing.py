@@ -12,31 +12,32 @@ from docx import Document as DocxDocument
 from io import BytesIO
 import markdown
 from bs4 import BeautifulSoup
+import time
 
 load_dotenv()
 
 # Set up Streamlit app
 st.set_page_config(layout='wide')
-st.image("onepager-logo-tr.png")
-input_column, response_column = st.columns([2,3])
 
+input_column, response_column = st.columns([2,3])
+input_column.image("onepager-logo.png", use_column_width="auto")
 # Add inputs for sender, recipient, and purpose
 sender_column1, sender_column2 = input_column.columns([1,2])
 sender_column1.markdown('&nbsp;')
 sender_column1.markdown('Who sends the OnePager?')
-sender = sender_column2.text_input('', key='sender')
+sender = sender_column2.text_input('', key='sender', placeholder="e.g. Assistant to the Board of Management at a medium-sized automotive supplier")
 
 recipient_column1, recipient_column2 = input_column.columns([1,2])
 recipient_column1.markdown('&nbsp;')
 recipient_column1.markdown('Who receives the OnePager?')
 recipient_column1.markdown('&nbsp;')
-recipient = recipient_column2.text_input('', key='recipient', value='e.g. Assistant to the Board of Management at a medium-sized automotive supplier')
+recipient = recipient_column2.text_input('', key='recipient', placeholder="e.g. Marketing director in our/another company")
 
-purpose = input_column.text_input('What is the purpose of the OnePager?')
+purpose = input_column.text_input('What is the purpose of the OnePager?', key='purpose', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
 
 # Add dropdown for document structure
 # New code
-doc_structure = input_column.radio('How should the OnePager be structured?', ['AI Suggestion', 'Bullet Points', 'Pitch (3 Parts)', 'Report', 'No Structure', 'Decision Paper'], horizontal=True)# Add sliders for tone, technicality, and length
+doc_structure = input_column.radio('How should the OnePager be structured?', ['Decision Paper','AI Suggestion', 'Bullet Points', 'Pitch (3 Parts)', 'Report', 'No Structure'], horizontal=True)# Add sliders for tone, technicality, and length
 
 formality_labels = {1: 'Casual', 2: 'Somewhat Casual', 3: 'Neutral', 4: 'Somewhat Formal', 5: 'Formal'}
 formality_options = {'Casual': 1, 'Somewhat Casual': 2, 'Neutral': 3, 'Somewhat Formal': 4, 'Formal': 5}
@@ -59,29 +60,33 @@ max_tokens = length_options[length_label]
 uploaded_file = input_column.file_uploader("Upload a PDF with background information.", type="pdf")
 
 # Add inputs for source description, call to action, and additional info
-source_description = input_column.text_input('What kind of document is this? Why is it relevant?')
-call_to_action = input_column.text_input('What is the recommendation for action?')
+source_description = input_column.text_input('What kind of document is this? Why is it relevant?', key="source", placeholder="e.g. Relevant Case-Study to xy, which supports the argumentation")
+call_to_action = input_column.text_input('What is the recommendation for action?', key="rfa", placeholder="e.g. We should cooperate with software company xy")
 action_tone = input_column.slider('How directly should this recommendation be placed?', 1, 5, 3, format="%d")
-additional_info = input_column.text_input('What additional information belongs in the OnePager?')
+additional_info = input_column.text_input('What additional information belongs in the OnePager?', placeholder="e.g. We have already had a successful workshop with the partner")
 
 # New code
 deadline_column1, deadline_column2 = input_column.columns(2)
-deadline_type = deadline_column1.radio('Is there a deadline?', ['Up to decision', 'Up to execution'])
-deadline_date = deadline_column2.date_input('Select a date')
+deadline_type = deadline_column1.radio('Is there a deadline?', ['Yes', 'No'])
+if deadline_type == 'Yes':
+    deadline_date = deadline_column2.date_input('Select a date')
 
 
 
 if uploaded_file is not None:
     # Create the ServiceContext with the user-selected temperature
     service_context = ServiceContext.from_defaults(llm=OpenAI(temperature=0.2, model="gpt-4", max_tokens=max_tokens))
+    status = st.empty()
 
-    with st.spinner('Reading PDF...'):
-        pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
-        text = " ".join(page.extract_text() for page in pdf.pages)
-        documents = [Document(text=text)]
-        index = VectorStoreIndex.from_documents(documents, service_context=service_context)
 
     if input_column.button('Generate'):
+        with st.spinner('Reading PDF...'):
+            status.text('Processing...') 
+            pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
+            text = " ".join(page.extract_text() for page in pdf.pages)
+            documents = [Document(text=text)]
+            index = VectorStoreIndex.from_documents(documents, service_context=service_context)
+ 
         # Determine formality phrase
         if tone_value == 1:
             formality = "In a casual and conversational style, "
@@ -118,15 +123,16 @@ if uploaded_file is not None:
         if source_description and (doc_structure != "Decision Paper"):
             query += f" The source document is: {source_description}."
 
-
+        
         # Generate the response
         with st.spinner(f'Generating {doc_structure.lower()}...'):
+
             retriever = VectorIndexRetriever(index=index)
             query_engine = RetrieverQueryEngine(retriever=retriever)
             response = query_engine.query(query)
             # Store the response text in the session state
             st.session_state['response'] = response.response
-
+        status.text('Done processing.')
 # Display the response stored in the session state
 if 'response' in st.session_state:
     response_text = st.session_state['response']

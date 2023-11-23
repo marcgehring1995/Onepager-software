@@ -1,3 +1,5 @@
 [theme]
 primaryColor = "#216477"
-base = "dark"
+base = "light"
+backgroundColor="#FFFFFF"
+textColor="#326F77"
