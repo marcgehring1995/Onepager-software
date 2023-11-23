@@ -7,3 +7,7 @@ python-dotenv==1.0.0
 python-docx==0.8.11
 beautifulsoup4==4.12.2
 Markdown==3.5
+streamlit_lottie==0.0.5 
+requests==2.29.0
+
+

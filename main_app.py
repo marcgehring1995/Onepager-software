@@ -16,12 +16,29 @@ from bs4 import BeautifulSoup
 from docx import Document as DocxDocument
 from io import BytesIO
 
+import time
+from streamlit_lottie import st_lottie
+from streamlit_lottie import st_lottie_spinner
+import requests
+
+
 def app():
     # Retrieve OpenAI API key from secrets
     openai.api_key = st.secrets["OPENAI_API_KEY"]
 
     input_column, response_column = st.columns([2,3])
     input_column.image("onepager-logo.png", use_column_width="auto")
+
+
+    def load_lottieurl(url: str):
+        r = requests.get(url)
+        if r.status_code != 200:
+            return None
+        return r.json()
+    lottie_url_document = "https://lottie.host/2142701f-0878-443c-8cd4-1ff507484222/9dgomqSy3R.json"
+    lottie_doc = load_lottieurl(lottie_url_document)
+
+
     # Add inputs for sender, recipient, and purpose
     sender_column1, sender_column2 = input_column.columns([1,2])
     sender_column1.markdown('&nbsp;')
@@ -73,6 +90,29 @@ def app():
         deadline_date = deadline_column2.date_input('Select a date')
 
 
+
+        # List of sentences to display
+    paragraphs = [
+        "Your OnePager is being generated...\nWe are currently analyzing the provided information...",
+        "The document is being structured according to your preferences...\nThis involves organizing the content in a logical and coherent manner...",
+        "The content is being finalized...\nWe are ensuring that the information is accurate and up-to-date...",
+        "We are almost there...\nThe final touches are being added...",
+        "Your document is ready for review...\nThank you for your patience...",
+    ]
+
+    output_placeholder = response_column.empty()
+
+
+    def generate_response(index, query):
+        # Generate the response
+        retriever = VectorIndexRetriever(index=index)
+        query_engine = RetrieverQueryEngine(retriever=retriever)
+        response = query_engine.query(query)
+        # Store the response text in a file
+        with open('response.txt', 'w') as f:
+            f.write(response.response)
+
+
     if uploaded_file is not None:
         # Create the ServiceContext with the user-selected temperature
         service_context = ServiceContext.from_defaults(llm=OpenAI(temperature=0.2, model="gpt-4", max_tokens=max_tokens))
@@ -120,13 +160,14 @@ def app():
                 query += f" The source document is: {source_description}."
 
 
-            # Generate the response
-            with st.spinner(f'Generating {doc_structure.lower()}...'):
-                retriever = VectorIndexRetriever(index=index)
-                query_engine = RetrieverQueryEngine(retriever=retriever)
-                response = query_engine.query(query)
-                # Store the response text in the session state
-                st.session_state['response'] = response.response
+        if input_column.button('Generate'):
+            with st_lottie_spinner(lottie_doc, key="generate"):
+                status.text('Processing...') 
+                pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
+                text = " ".join(page.extract_text() for page in pdf.pages)
+                documents = [Document(text=text)]
+                index = VectorStoreIndex.from_documents(documents, service_context=service_context)
+                
 
     # Display the response stored in the session state
     if 'response' in st.session_state:

@@ -12,12 +12,26 @@ from docx import Document as DocxDocument
 from io import BytesIO
 import markdown
 from bs4 import BeautifulSoup
+
 import time
+from streamlit_lottie import st_lottie
+from streamlit_lottie import st_lottie_spinner
+import requests
+
 
 load_dotenv()
 
 # Set up Streamlit app
 st.set_page_config(layout='wide')
+
+
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+lottie_url_document = "https://lottie.host/2142701f-0878-443c-8cd4-1ff507484222/9dgomqSy3R.json"
+lottie_doc = load_lottieurl(lottie_url_document)
 
 input_column, response_column = st.columns([2,3])
 input_column.image("onepager-logo.png", use_column_width="auto")
@@ -71,6 +85,20 @@ deadline_type = deadline_column1.radio('Is there a deadline?', ['Yes', 'No'])
 if deadline_type == 'Yes':
     deadline_date = deadline_column2.date_input('Select a date')
 
+# Placeholder for the output
+
+
+# List of sentences to display
+paragraphs = [
+    "Your OnePager is being generated...\nWe are currently analyzing the provided information...",
+    "The document is being structured according to your preferences...\nThis involves organizing the content in a logical and coherent manner...",
+    "The content is being finalized...\nWe are ensuring that the information is accurate and up-to-date...",
+    "We are almost there...\nThe final touches are being added...",
+    "Your document is ready for review...\nThank you for your patience...",
+]
+
+output_placeholder = response_column.empty()
+
 
 
 if uploaded_file is not None:
@@ -86,7 +114,9 @@ if uploaded_file is not None:
             text = " ".join(page.extract_text() for page in pdf.pages)
             documents = [Document(text=text)]
             index = VectorStoreIndex.from_documents(documents, service_context=service_context)
- 
+
+
+
         # Determine formality phrase
         if tone_value == 1:
             formality = "In a casual and conversational style, "
@@ -124,15 +154,21 @@ if uploaded_file is not None:
             query += f" The source document is: {source_description}."
 
         
-        # Generate the response
-        with st.spinner(f'Generating {doc_structure.lower()}...'):
 
-            retriever = VectorIndexRetriever(index=index)
-            query_engine = RetrieverQueryEngine(retriever=retriever)
-            response = query_engine.query(query)
-            # Store the response text in the session state
-            st.session_state['response'] = response.response
-        status.text('Done processing.')
+
+        with response_column:
+            # Generate the response
+            with st_lottie_spinner(lottie_doc):
+                retriever = VectorIndexRetriever(index=index)
+                query_engine = RetrieverQueryEngine(retriever=retriever)
+                response = query_engine.query(query)
+                # Store the response text in the session state
+                st.session_state['response'] = response.response
+                # Set the flag to True to indicate that the response is ready
+                st.session_state['response_ready'] = True
+            status.text('Done processing.')
+
+            
 # Display the response stored in the session state
 if 'response' in st.session_state:
     response_text = st.session_state['response']
@@ -145,6 +181,7 @@ if 'response' in st.session_state:
 
     # Create a new Document
     doc = DocxDocument()
+
 
     # Add each paragraph to the document
     for element in soup:
