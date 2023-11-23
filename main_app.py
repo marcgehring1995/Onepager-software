@@ -91,28 +91,6 @@ def app():
 
 
 
-        # List of sentences to display
-    paragraphs = [
-        "Your OnePager is being generated...\nWe are currently analyzing the provided information...",
-        "The document is being structured according to your preferences...\nThis involves organizing the content in a logical and coherent manner...",
-        "The content is being finalized...\nWe are ensuring that the information is accurate and up-to-date...",
-        "We are almost there...\nThe final touches are being added...",
-        "Your document is ready for review...\nThank you for your patience...",
-    ]
-
-    output_placeholder = response_column.empty()
-
-
-    def generate_response(index, query):
-        # Generate the response
-        retriever = VectorIndexRetriever(index=index)
-        query_engine = RetrieverQueryEngine(retriever=retriever)
-        response = query_engine.query(query)
-        # Store the response text in a file
-        with open('response.txt', 'w') as f:
-            f.write(response.response)
-
-
     if uploaded_file is not None:
         # Create the ServiceContext with the user-selected temperature
         service_context = ServiceContext.from_defaults(llm=OpenAI(temperature=0.2, model="gpt-4", max_tokens=max_tokens))
@@ -161,7 +139,7 @@ def app():
 
 
         if input_column.button('Generate'):
-            with st_lottie_spinner(lottie_doc, key="generate"):
+            with st_lottie_spinner(lottie_doc):
                 status.text('Processing...') 
                 pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
                 text = " ".join(page.extract_text() for page in pdf.pages)
