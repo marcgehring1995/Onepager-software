@@ -95,14 +95,16 @@ def app():
         # Create the ServiceContext with the user-selected temperature
         service_context = ServiceContext.from_defaults(llm=OpenAI(temperature=0.2, model="gpt-4", max_tokens=max_tokens))
         status = st.empty()
-        with st.spinner('Reading PDF...'):
-            status.text('Processing...')
-            pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
-            text = " ".join(page.extract_text() for page in pdf.pages)
-            documents = [Document(text=text)]
-            index = VectorStoreIndex.from_documents(documents, service_context=service_context)
+
 
         if input_column.button('Generate', key='generate-button'):
+            with st.spinner('Reading PDF...'):
+                status.text('Processing...')
+                pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
+                text = " ".join(page.extract_text() for page in pdf.pages)
+                documents = [Document(text=text)]
+                index = VectorStoreIndex.from_documents(documents, service_context=service_context)
+                
             # Determine formality phrase
             if tone_value == 1:
                 formality = "In a casual and conversational style, "
