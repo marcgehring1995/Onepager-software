@@ -95,18 +95,14 @@ def app():
         # Create the ServiceContext with the user-selected temperature
         service_context = ServiceContext.from_defaults(llm=OpenAI(temperature=0.2, model="gpt-4", max_tokens=max_tokens))
         status = st.empty()
+        with st.spinner('Reading PDF...'):
+            status.text('Processing...')
+            pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
+            text = " ".join(page.extract_text() for page in pdf.pages)
+            documents = [Document(text=text)]
+            index = VectorStoreIndex.from_documents(documents, service_context=service_context)
 
-
-        if input_column.button('Generate'):
-            with st.spinner('Reading PDF...'):
-                status.text('Processing...') 
-                pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
-                text = " ".join(page.extract_text() for page in pdf.pages)
-                documents = [Document(text=text)]
-                index = VectorStoreIndex.from_documents(documents, service_context=service_context)
-
-
-
+        if input_column.button('Generate', key='generate-button'):
             # Determine formality phrase
             if tone_value == 1:
                 formality = "In a casual and conversational style, "
@@ -132,7 +128,6 @@ def app():
                 action_formality = "In a highly formal and academic style, "
 
             # Add user context and structure to the query
-            # New code
             if doc_structure == 'AI Suggestion':
                 query = f"As {sender}, I need a document for {recipient} that is {technicality} in technicality. My goal is {purpose}. I want the response in English. Please provide the response in markdown format with appropriate features. {formality}"
             elif doc_structure == 'Decision Paper':
@@ -142,8 +137,6 @@ def app():
             # If source_description is provided, add it to the query
             if source_description and (doc_structure != "Decision Paper"):
                 query += f" The source document is: {source_description}."
-
-        
 
 
         with response_column:
