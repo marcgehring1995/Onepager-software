@@ -101,7 +101,7 @@ def app():
             documents = [Document(text=text)]
             index = VectorStoreIndex.from_documents(documents, service_context=service_context)
 
-        if input_column.button('Generate'):
+        if input_column.button('Generate', key='generate-button'):
             # Determine formality phrase
             if tone_value == 1:
                 formality = "In a casual and conversational style, "
@@ -138,14 +138,17 @@ def app():
                 query += f" The source document is: {source_description}."
 
 
-        if input_column.button('Generate'):
-            with st_lottie_spinner(lottie_doc):
-                status.text('Processing...') 
-                pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
-                text = " ".join(page.extract_text() for page in pdf.pages)
-                documents = [Document(text=text)]
-                index = VectorStoreIndex.from_documents(documents, service_context=service_context)
-                
+            with response_column:
+                # Generate the response
+                with st_lottie_spinner(lottie_doc):
+                    retriever = VectorIndexRetriever(index=index)
+                    query_engine = RetrieverQueryEngine(retriever=retriever)
+                    response = query_engine.query(query)
+                    # Store the response text in the session state
+                    st.session_state['response'] = response.response
+                    # Set the flag to True to indicate that the response is ready
+                    st.session_state['response_ready'] = True
+                status.text('Done processing.')
 
     # Display the response stored in the session state
     if 'response' in st.session_state:
