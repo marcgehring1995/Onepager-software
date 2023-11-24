@@ -94,14 +94,19 @@ def app():
     if uploaded_file is not None:
         # Create the ServiceContext with the user-selected temperature
         service_context = ServiceContext.from_defaults(llm=OpenAI(temperature=0.2, model="gpt-4", max_tokens=max_tokens))
+        status = st.empty()
 
-        with st.spinner('Reading PDF...'):
-            pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
-            text = " ".join(page.extract_text() for page in pdf.pages)
-            documents = [Document(text=text)]
-            index = VectorStoreIndex.from_documents(documents, service_context=service_context)
 
-        if input_column.button('Generate', key='generate-button'):
+        if input_column.button('Generate'):
+            with st.spinner('Reading PDF...'):
+                status.text('Processing...') 
+                pdf = PdfReader(io.BytesIO(uploaded_file.getvalue()))
+                text = " ".join(page.extract_text() for page in pdf.pages)
+                documents = [Document(text=text)]
+                index = VectorStoreIndex.from_documents(documents, service_context=service_context)
+
+
+
             # Determine formality phrase
             if tone_value == 1:
                 formality = "In a casual and conversational style, "
@@ -127,6 +132,7 @@ def app():
                 action_formality = "In a highly formal and academic style, "
 
             # Add user context and structure to the query
+            # New code
             if doc_structure == 'AI Suggestion':
                 query = f"As {sender}, I need a document for {recipient} that is {technicality} in technicality. My goal is {purpose}. I want the response in English. Please provide the response in markdown format with appropriate features. {formality}"
             elif doc_structure == 'Decision Paper':
@@ -137,18 +143,20 @@ def app():
             if source_description and (doc_structure != "Decision Paper"):
                 query += f" The source document is: {source_description}."
 
+        
 
-            with response_column:
-                # Generate the response
-                with st_lottie_spinner(lottie_doc):
-                    retriever = VectorIndexRetriever(index=index)
-                    query_engine = RetrieverQueryEngine(retriever=retriever)
-                    response = query_engine.query(query)
-                    # Store the response text in the session state
-                    st.session_state['response'] = response.response
-                    # Set the flag to True to indicate that the response is ready
-                    st.session_state['response_ready'] = True
-                status.text('Done processing.')
+
+        with response_column:
+            # Generate the response
+            with st_lottie_spinner(lottie_doc):
+                retriever = VectorIndexRetriever(index=index)
+                query_engine = RetrieverQueryEngine(retriever=retriever)
+                response = query_engine.query(query)
+                # Store the response text in the session state
+                st.session_state['response'] = response.response
+                # Set the flag to True to indicate that the response is ready
+                st.session_state['response_ready'] = True
+            status.text('Done processing.')
 
     # Display the response stored in the session state
     if 'response' in st.session_state:
