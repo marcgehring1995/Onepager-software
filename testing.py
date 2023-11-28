@@ -37,7 +37,7 @@ def load_lottieurl(url: str):
     if r.status_code != 200:
         return None
     return r.json()
-lottie_url_document = "https://lottie.host/2142701f-0878-443c-8cd4-1ff507484222/9dgomqSy3R.json"
+lottie_url_document = "https://lottie.host/6f7bd064-3488-46b0-a2c1-e74162937a76/kaFAwA0KFR.json"
 lottie_doc = load_lottieurl(lottie_url_document)
 
 input_column, response_column = st.columns([3,2])
