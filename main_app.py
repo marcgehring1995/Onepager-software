@@ -80,7 +80,14 @@ def app():
     # Add inputs for source description, call to action, and additional info
     source_description = input_column.text_input('What kind of document is this? Why is it relevant?', key="source", placeholder="e.g. Relevant Case-Study to xy, which supports the argumentation")
     call_to_action = input_column.text_input('What is the recommendation for action?', key="rfa", placeholder="e.g. We should cooperate with software company xy")
-    action_tone = input_column.slider('How directly should this recommendation be placed?', 1, 5, 3, format="%d")
+    
+    action_tone_labels = {1: 'Indirect', 2: 'Somewhat Indirect', 3: 'Moderate', 4: 'Somewhat Direct', 5: 'Direct'}
+    action_tone_options = {'Indirect': 1, 'Somewhat Indirect': 2, 'Moderate': 3, 'Somewhat Direct': 4, 'Direct': 5}
+    action_tone_label = input_column.select_slider('Select action tone', options=list(action_tone_options.keys()))
+    action_tone_value = action_tone_options[action_tone_label]
+    action_tone = action_tone_labels[action_tone_value]
+
+
     additional_info = input_column.text_input('What additional information belongs in the OnePager?', placeholder="e.g. We have already had a successful workshop with the partner")
 
     # New code
@@ -180,4 +187,4 @@ def app():
         doc.save(buf)
         buf.seek(0)
         # Add a download button for the response
-        response_column.download_button("Download response", buf.getvalue(), file_name="response.docx", mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        response_column.download_button("Download OnePager", buf.getvalue(), file_name="OnePager.docx", mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
