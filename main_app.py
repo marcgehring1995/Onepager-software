@@ -26,7 +26,7 @@ def app():
     # Retrieve OpenAI API key from secrets
     openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-    input_column, response_column = st.columns([2,3])
+    input_column, response_column = st.columns([3,2])
     input_column.image("onepager-logo.png", use_column_width="auto")
 
 
@@ -51,11 +51,11 @@ def app():
     recipient_column1.markdown('&nbsp;')
     recipient = recipient_column2.text_input('', key='recipient', placeholder="e.g. Marketing director in our/another company")
 
-    purpose = input_column.text_input('What is the context of this one-pager?', key='context', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
+    purpose = input_column.text_input('What is the context of this OnePager?', key='context', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
 
     # Add dropdown for document structure
     # New code
-    doc_structure = input_column.radio('How should the OnePager be structured?', ['Decision Paper','AI Suggestion', 'Bullet Points', 'Pitch (3 Parts)', 'Report', 'No Structure'], horizontal=True)# Add sliders for tone, technicality, and length
+    doc_structure = input_column.radio('How should the OnePager be structured?', ['Decision Paper','Speaking Points','Report'], horizontal=True)# Add sliders for tone, technicality, and length
 
     formality_labels = {1: 'Casual', 2: 'Somewhat Casual', 3: 'Neutral', 4: 'Somewhat Formal', 5: 'Formal'}
     formality_options = {'Casual': 1, 'Somewhat Casual': 2, 'Neutral': 3, 'Somewhat Formal': 4, 'Formal': 5}
@@ -130,10 +130,8 @@ def app():
                 action_formality = "In a highly formal and academic style, "
 
             # Add user context and structure to the query
-            if doc_structure == 'AI Suggestion':
-                query = f"As {sender}, I need a document for {recipient} that is {technicality} in technicality. My goal is {purpose}. I want the response in English. Please provide the response in markdown format with appropriate features. {formality}"
-            elif doc_structure == 'Decision Paper':
-                query = f"As a {sender}, you will provide {recipient} with a short decision paper. The purpose of the document is: {purpose}. To create the document, you can refer to the following three elements: source, additional information and call to action. The source is described as {source_description} and is delimited by triple backticks: ```source```. Additional information: {additional_info}. Call to action: {call_to_action}. Your response will be structured in the three text sections “Background”, “Problem” and “Solution”. The writing style of the document should be {tone} with a {technicality} level of technicality."
+            if doc_structure == 'Decision Paper':
+                query = f"As a {sender}, you will provide {recipient} with a decision paper. The purpose of the document is: {purpose}. To create the document, you can refer to the following three elements: source, additional information and call to action. The source is described as {source_description} and is delimited by triple backticks: ```source```. Additional information: {additional_info}. Call to action: {call_to_action}. Deadline: {deadline_date}. Your response will start with firstly “bold(Recommendation:  ) call to action”, secondly “bold(Deadline:  )  deadline” and then the three main text sections, “Background”, “Problem” and “Solution”. The writing style of the document should be {tone} with a {technicality} level of technicality. Please provide the response in markdown format with appropriate features."
             else:
                 query = f"As {sender}, I need a {doc_structure} of the document for {recipient} that is {length_label} in length and {technicality} in technicality. My goal is {purpose}. I want the response in English. Please provide the response in markdown format with appropriate features. {formality}"
             # If source_description is provided, add it to the query
