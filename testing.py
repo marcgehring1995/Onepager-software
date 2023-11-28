@@ -42,7 +42,7 @@ lottie_doc = load_lottieurl(lottie_url_document)
 
 input_column, response_column = st.columns([3,2])
 input_column.image("onepager-logo.png", use_column_width="auto")
-# Add inputs for sender, recipient, and purpose
+# Add inputs for sender, recipient, and context
 sender_column1, sender_column2 = input_column.columns([1,2])
 sender_column1.markdown('&nbsp;')
 sender_column1.markdown('Who sends the OnePager?')
@@ -54,7 +54,7 @@ recipient_column1.markdown('Who receives the OnePager?')
 recipient_column1.markdown('&nbsp;')
 recipient = recipient_column2.text_input('', key='recipient', placeholder="e.g. Marketing director in our/another company")
 
-purpose = input_column.text_input('What is the context of the OnePager?', key='purpose', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
+context = input_column.text_input('What is the context of the OnePager?', key='context', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
 
 # Add dropdown for document structure
 # New code
@@ -142,9 +142,9 @@ if uploaded_file is not None:
         # Add user context and structure to the query
         # New code
         if doc_structure == 'Decision Paper':
-            query = f"As a {sender}, you will provide {recipient} with a decision paper. The purpose of the document is: {purpose}. To create the document, you can refer to the following three elements: source, additional information and call to action. The source is described as {source_description} and is delimited by triple backticks: ```source```. Additional information: {additional_info}. Call to action: {call_to_action}. Deadline: {deadline_date}. Your response will start with firstly “bold(Recommendation:  ) call to action”, secondly “bold(Deadline:  )  deadline” and then the three main text sections, “Background”, “Problem” and “Solution”. The writing style of the document should be {tone} with a {technicality} level of technicality. Please provide the response in markdown format with appropriate features."
+            query = f"As a {sender}, you will provide {recipient} with a decision paper. The context of the document is: {context}. To create the document, you can refer to the following three elements: source, additional information and call to action. The source is described as {source_description} and is delimited by triple backticks: ```source```. Additional information: {additional_info}. Call to action: {call_to_action}. Deadline: {deadline_date}. Your response will start with firstly “bold(Recommendation:  ) ”, secondly “bold(Deadline:  )  {deadline_date}” and then the three main text sections, “Background”, “Problem” and “Solution”. The writing style of the document should be {tone} with a {technicality} level of technicality. Please provide the response in markdown format with appropriate features."
         else:
-            query = f"As {sender}, I need a {doc_structure} of the document for {recipient} that is {length_label} in length and {technicality} in technicality. My goal is {purpose}. I want the response in English. Please provide the response in markdown format with appropriate features. {formality}"
+            query = f"As {sender}, I need a {doc_structure} of the document for {recipient} that is {length_label} in length and {technicality} in technicality. My goal is {context}. I want the response in English. Please provide the response in markdown format with appropriate features. {tone}"
         # If source_description is provided, add it to the query
         if source_description and (doc_structure != "Decision Paper"):
             query += f" The source document is: {source_description}."
