@@ -70,7 +70,7 @@ def app():
     technicality = technicality_options[technicality_label]
 
     # Add slider for max tokens
-    length_options = {'Short': 300, 'Medium': 450, 'Long': 600}
+    length_options = {'Short': 350, 'Medium': 500, 'Long': 650}
     length_label = input_column.select_slider('Select length', options=list(length_options.keys()))
     max_tokens = length_options[length_label]
 
