@@ -55,46 +55,46 @@ def app():
 
     # Add dropdown for document structure
     # New code
-    doc_structure = input_column.radio('How should the OnePager be structured?', ['Decision Paper','Speaking Points','Report'], horizontal=True)# Add sliders for tone, technicality, and length
+    doc_structure = input_column.radio(r"$\textsf{\large How should the OnePager be structured?}$", ['Decision Paper','Speaking Points','Report'], horizontal=True)# Add sliders for tone, technicality, and length
 
     formality_labels = {1: 'Casual', 2: 'Somewhat Casual', 3: 'Neutral', 4: 'Somewhat Formal', 5: 'Formal'}
     formality_options = {'Casual': 1, 'Somewhat Casual': 2, 'Neutral': 3, 'Somewhat Formal': 4, 'Formal': 5}
-    formality_label = input_column.select_slider('Select formality', options=list(formality_options.keys()))
+    formality_label = input_column.select_slider(r"$\textsf{\large Formality}$", options=list(formality_options.keys()))
     tone_value = formality_options[formality_label]
     tone = formality_labels[tone_value]
 
 
 
     technicality_options = {'Non-technical': 1, 'Somewhat non-technical': 2, 'Neutral': 3, 'Somewhat technical': 4, 'Technical': 5}
-    technicality_label = input_column.select_slider('Select technicality', options=list(technicality_options.keys()))
+    technicality_label = input_column.select_slider(r"$\textsf{\large Technicality}$", options=list(technicality_options.keys()))
     technicality = technicality_options[technicality_label]
 
     # Add slider for max tokens
     length_options = {'Short': 350, 'Medium': 500, 'Long': 650}
-    length_label = input_column.select_slider('Select length', options=list(length_options.keys()))
+    length_label = input_column.select_slider(r"$\textsf{\large Length}$", options=list(length_options.keys()))
     max_tokens = length_options[length_label]
 
     # Add file uploader for background information
-    uploaded_file = input_column.file_uploader("Upload a PDF with background information.", type="pdf")
+    uploaded_file = input_column.file_uploader(r"$\textsf{\large Upload a PDF with background information.}$", type="pdf")
 
     # Add inputs for source description, call to action, and additional info
-    source_description = input_column.text_input('What kind of document is this? Why is it relevant?', key="source", placeholder="e.g. Relevant Case-Study to xy, which supports the argumentation")
-    call_to_action = input_column.text_input('What is the recommendation for action?', key="rfa", placeholder="e.g. We should cooperate with software company xy")
+    source_description = input_column.text_input(r"$\textsf{\large What kind of document is this? Why is it relevant?}$", key="source", placeholder="e.g. Relevant Case-Study to xy, which supports the argumentation")
+    call_to_action = input_column.text_input(r"$\textsf{\large What is the recommendation for action?}$", key="rfa", placeholder="e.g. We should cooperate with software company xy")
     
     action_tone_labels = {1: 'Indirect', 2: 'Somewhat Indirect', 3: 'Moderate', 4: 'Somewhat Direct', 5: 'Direct'}
     action_tone_options = {'Indirect': 1, 'Somewhat Indirect': 2, 'Moderate': 3, 'Somewhat Direct': 4, 'Direct': 5}
-    action_tone_label = input_column.select_slider('Select action tone', options=list(action_tone_options.keys()))
+    action_tone_label = input_column.select_slider(r"$\textsf{\large Action tone}$", options=list(action_tone_options.keys()))
     action_tone_value = action_tone_options[action_tone_label]
     action_tone = action_tone_labels[action_tone_value]
 
 
-    additional_info = input_column.text_input('What additional information belongs in the OnePager?', placeholder="e.g. We have already had a successful workshop with the partner")
+    additional_info = input_column.text_input(r"$\textsf{\large What additional information belongs in the OnePager?}$", placeholder="e.g. We have already had a successful workshop with the partner")
 
     # New code
     deadline_column1, deadline_column2 = input_column.columns(2)
-    deadline_type = deadline_column1.radio('Is there a deadline?', ['Yes', 'No'])
+    deadline_type = deadline_column1.radio(r"$\textsf{\large Is there a deadline?}$", ['Yes', 'No'])
     if deadline_type == 'Yes':
-        deadline_date = deadline_column2.date_input('Select a date')
+        deadline_date = deadline_column2.date_input(r"$\textsf{\large Select a date}$")
 
 
 
