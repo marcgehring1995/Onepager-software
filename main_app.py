@@ -42,16 +42,16 @@ def app():
     # Add inputs for sender, recipient, and context
     sender_column1, sender_column2 = input_column.columns([1,2])
     sender_column1.markdown('&nbsp;')
-    sender_column1.markdown('Who sends the OnePager?')
+    sender_column1.markdown(r"$\textsf{\large Who Sends the OnePager?}$")
     sender = sender_column2.text_input('', key='sender', placeholder="e.g. Assistant to the Board of Management at a medium-sized automotive supplier")
 
     recipient_column1, recipient_column2 = input_column.columns([1,2])
     recipient_column1.markdown('&nbsp;')
-    recipient_column1.markdown('Who receives the OnePager?')
+    recipient_column1.markdown(r"$\textsf{\large Who recieves the OnePager?}$")
     recipient_column1.markdown('&nbsp;')
     recipient = recipient_column2.text_input('', key='recipient', placeholder="e.g. Marketing director in our/another company")
 
-    context = input_column.text_input('What is the context of this OnePager?', key='context', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
+    context = input_column.text_input(r"$\textsf{\large What is the context of the OnePager?}$", key='context', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
 
     # Add dropdown for document structure
     # New code
