@@ -45,24 +45,24 @@ input_column.image("onepager-logo.png", use_column_width="auto")
 # Add inputs for sender, recipient, and context
 sender_column1, sender_column2 = input_column.columns([1,2])
 sender_column1.markdown('&nbsp;')
-sender_column1.markdown('Who sends the OnePager?')
+sender_column1.markdown(r"$\textsf{\large Who Sends the OnePager?}$")
 sender = sender_column2.text_input('', key='sender', placeholder="e.g. Assistant to the Board of Management at a medium-sized automotive supplier")
 
 recipient_column1, recipient_column2 = input_column.columns([1,2])
 recipient_column1.markdown('&nbsp;')
-recipient_column1.markdown('Who receives the OnePager?')
+recipient_column1.markdown(r"$\textsf{\large Who recieves the OnePager?}$")
 recipient_column1.markdown('&nbsp;')
 recipient = recipient_column2.text_input('', key='recipient', placeholder="e.g. Marketing director in our/another company")
 
-context = input_column.text_input('What is the context of the OnePager?', key='context', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
+context = input_column.text_input(r"$\textsf{\large What is the context of the OnePager?}$", key='context', placeholder=" e.g. Proposal for cooperation with software company xy for MVP development")
 
 # Add dropdown for document structure
 # New code
-doc_structure = input_column.radio('How should the OnePager be structured?', ['Decision Paper', 'Speaking Points', 'Report'], horizontal=True)# Add sliders for tone, technicality, and length
+doc_structure = input_column.radio(r"$\textsf{\large How should the OnePager be structured?}$", ['Decision Paper', 'Speaking Points', 'Report'], horizontal=True)# Add sliders for tone, technicality, and length
 
 formality_labels = {1: 'Casual', 2: 'Somewhat Casual', 3: 'Neutral', 4: 'Somewhat Formal', 5: 'Formal'}
 formality_options = {'Casual': 1, 'Somewhat Casual': 2, 'Neutral': 3, 'Somewhat Formal': 4, 'Formal': 5}
-formality_label = input_column.select_slider('Select formality', options=list(formality_options.keys()))
+formality_label = input_column.select_slider(r"$\textsf{\large Formality}$", options=list(formality_options.keys()))
 tone_value = formality_options[formality_label]
 tone = formality_labels[tone_value]
 
