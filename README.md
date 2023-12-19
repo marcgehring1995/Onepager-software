@@ -33,3 +33,7 @@ This application uses OpenAI's GPT-4 model, which requires an API key. The API k
 
 
 ![Screenshot 2023-11-11 025601](https://github.com/eakgun/onepager-streamlit/assets/60859449/c1c2bbd6-0111-4155-8341-150df0e8fc26)
+
+
+lastly the key has to be updated all the time
+
