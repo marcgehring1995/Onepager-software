@@ -36,7 +36,7 @@ if 'logged_in' not in st.session_state:
 
 # Create login form
 if not st.session_state['logged_in']:
-    username = st.text_input('Your Username')
+    username = st.text_input('Username')
     password = st.text_input('Password', type='password')
 
     if st.button('Log In'):
