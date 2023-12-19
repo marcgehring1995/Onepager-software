@@ -56,7 +56,7 @@ if st.session_state['logged_in']:
     input_column, response_column = st.columns([2,3])
 
     # Add inputs for sender, recipient, and purpose
-    sender = input_column.text_input('Who sends the OnePager?')
+    sender = input_column.text_input('Who sends this OnePager?')
     recipient = input_column.text_input('Who receives the OnePager?')
     purpose = input_column.text_input('What is the purpose of the OnePager?')
 
